@@ -41,10 +41,10 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
                 //Isso vai ser chamado quando usuário clicar no item
 
 
-                // Show data in toast on clicking
-                String title = modelList.get(position).getTitle();
-                String descr = modelList.get(position).getDescription();
-                Toast.makeText(listActivity, title+"\n"+descr, Toast.LENGTH_SHORT).show();
+                // Mostra os dados em um Toast TESTE
+                //String title = modelList.get(position).getTitle();
+                //String descr = modelList.get(position).getDescription();
+                //Toast.makeText(listActivity, title+"\n"+descr, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onItemLongClick(View view, final int position) {
@@ -53,30 +53,38 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
                 //Creating AlertDialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(listActivity);
                 //options to display in dialog
-                String[] options = { "Update", "Delete" };
+                String[] options = { "Editar", "Excluir" };
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
                         if (which == 0){
-                            //update is clicked
-                            //get data
+
+                            //Pega os dados
                             String id = modelList.get(position).getId();
                             String title = modelList.get(position).getTitle();
                             String description = modelList.get(position).getDescription();
+                            String latitude = modelList.get(position).getLatitude();
+                            String longitude = modelList.get(position).getLongitude();
+                            String horario = modelList.get(position).getHorario();
 
                             //intent to start activity
                             Intent intent = new Intent(listActivity, MainActivity.class);
+
                             //put data in intent
                             intent.putExtra("pId", id);
                             intent.putExtra("pTitle", title);
                             intent.putExtra("pDescription", description);
+                            intent.putExtra("pLatitude", latitude);
+                            intent.putExtra("pLongitude", longitude);
+                            intent.putExtra("pHorario", horario);
+
                             //start activity
                             listActivity.startActivity(intent);
 
 
                         }
                         if (which == 1){
-                            //delete is clicked
+                            //Se a opção de deletar for selecionada:
                             listActivity.deleteData(position);
                         }
                     }
@@ -96,6 +104,9 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
         //bind views / set data
         viewHolder.mTitleTv.setText(modelList.get(i).getTitle());
         viewHolder.mDescriptionTv.setText(modelList.get(i).getDescription());
+        viewHolder.mLatitudeTv.setText(modelList.get(i).getLatitude());
+        viewHolder.mLongitudeTv.setText(modelList.get(i).getLongitude());
+        viewHolder.mHorarioTv.setText(modelList.get(i).getHorario());
     }
 
     @Override

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
 
-    TextView mTitleTv, mDescriptionTv;
+    TextView mTitleTv, mDescriptionTv, mLatitudeTv, mLongitudeTv, mHorarioTv;
     View mView;
 
 
@@ -17,7 +17,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
         mView = itemView;
 
-        //itemClick
+        //Clique simples
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -26,7 +26,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        //item Long click Listener
+        //Clique longo
         itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -35,14 +35,20 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        //Inicializar views com Model_Layout.xml
+        //Inicializa as views com o Model_Layout.xml
         mTitleTv = itemView.findViewById(R.id.rTitleTv);
         mDescriptionTv = itemView.findViewById(R.id.rDescriptionTv);
+        mLatitudeTv = itemView.findViewById(R.id.rLatitudeTv);
+        mLongitudeTv = itemView.findViewById(R.id.rLongitudeTv);
+        mHorarioTv = itemView.findViewById(R.id.rDataTv);
+
 
     }
 
 
     private ViewHolder.ClickListener mClickListener;
+
+
     //Interface para o Click Listener
     public interface ClickListener{
         void onItemClick(View view, int position);

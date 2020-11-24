@@ -82,7 +82,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void showData() {
         //set title of progress dialog
-        pd.setTitle("Loading Data...");
+        pd.setTitle("Carregando locais...");
         //show progress dialog
         pd.show();
 
@@ -98,7 +98,10 @@ public class ListActivity extends AppCompatActivity {
                         for (DocumentSnapshot doc: task.getResult()){
                             Model model = new Model(doc.getString("id"),
                                     doc.getString("title"),
-                                    doc.getString("description"));
+                                    doc.getString("description"),
+                                    doc.getString("latitude"),
+                                    doc.getString("longitude"),
+                                    doc.getString("horario"));
                             modelList.add(model);
                         }
                         //adapter
@@ -123,15 +126,15 @@ public class ListActivity extends AppCompatActivity {
 
     public void deleteData(int index){
 
-        pd.setTitle("Deleting Data...");
+        pd.setTitle("Deletando local...");
         pd.show();
         db.collection("Documents").document(modelList.get(index).getId())
                 .delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        //Chamado quando exclui com sucesso
-                        Toast.makeText(ListActivity.this, "Excluido!", Toast.LENGTH_SHORT).show();
+                        //Se deletar com sucesso:
+                        Toast.makeText(ListActivity.this, "Local excluído com sucesso!", Toast.LENGTH_SHORT).show();
                         showData();
                     }
                 })
@@ -139,7 +142,7 @@ public class ListActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         pd.dismiss();
-                        //Chamado quando acontece algum problema
+                        //Se der erro ao deletar
                         Toast.makeText(ListActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
