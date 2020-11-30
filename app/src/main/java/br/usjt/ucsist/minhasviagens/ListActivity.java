@@ -35,7 +35,6 @@ public class ListActivity extends AppCompatActivity {
     //firestore instance
     FirebaseFirestore db;
 
-
     CustomAdapter adapter;
 
     ProgressDialog pd;
@@ -57,8 +56,6 @@ public class ListActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycler_view);
         mAddBtn = findViewById(R.id.addBtn);
 
-
-
         //set recycler view properties
         mRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -66,7 +63,6 @@ public class ListActivity extends AppCompatActivity {
 
         //init Progress Dialog
         pd = new ProgressDialog(this);
-
 
         // show data in recyclerView
         showData();
@@ -101,7 +97,9 @@ public class ListActivity extends AppCompatActivity {
                                     doc.getString("description"),
                                     doc.getString("latitude"),
                                     doc.getString("longitude"),
-                                    doc.getString("horario"));
+                                    doc.getString("horario"),
+                                    doc.getString("foto"));
+
                             modelList.add(model);
                         }
                         //adapter

@@ -1,6 +1,7 @@
 package br.usjt.ucsist.minhasviagens;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
@@ -9,7 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
+import android.widget.ImageView;
+import android.widget.TextView;
+import static android.app.Activity.RESULT_OK;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -61,6 +67,13 @@ public class MainActivity extends AppCompatActivity{
 
     ///////////////////////////// GPS FINAL  //////////////////////////////////////////////////////
 
+    ///////////////////////////// IMAGEM INICIO //////////////////////////////////////////////////////
+    private ImageView fotoContato;
+    private TextView linkContato;
+    String fotodocontato;
+
+    ///////////////////////////// IMAGEM FINAL  //////////////////////////////////////////////////////
+
 
     EditText mTitleEt, mDescriptionEt;
     TextView data;
@@ -81,11 +94,6 @@ public class MainActivity extends AppCompatActivity{
         Date currentTime = Calendar.getInstance().getTime();
         String data_hora = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime);
 
-
-        Log.d("MeuLog", data_hora);
-
-
-
         //////////// DATA E HORA FINAL ////////
 
 
@@ -93,6 +101,14 @@ public class MainActivity extends AppCompatActivity{
         ///////////////////////////// GPS INICIO //////////////////////////////////////////////////////
         Latitude = (TextView)findViewById(R.id.rLatitudeTv);
         Longitude = (TextView)findViewById(R.id.rLongitudeTv);
+
+        fotoContato = findViewById(R.id.fotoContato);
+        fotoContato.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tirarFoto();
+            }
+        });
 
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
@@ -105,16 +121,17 @@ public class MainActivity extends AppCompatActivity{
         ///////////////////////////// GPS FINAL  //////////////////////////////////////////////////////
 
 
-
-
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Add Data");
 
         mTitleEt = findViewById(R.id.titleEt);
         mDescriptionEt = findViewById(R.id.descriptionEt);
         mSaveBtn = findViewById(R.id.saveBtn);
-        mListBtn = findViewById(R.id.listBtn);
+        /*mListBtn = findViewById(R.id.listBtn);*/
+
+
+
+
 
         final Bundle bundle = getIntent().getExtras();
         if (bundle != null ){
@@ -151,7 +168,6 @@ public class MainActivity extends AppCompatActivity{
 
         db = FirebaseFirestore.getInstance();
 
-
         //Botao para subir os dados
         mSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +181,7 @@ public class MainActivity extends AppCompatActivity{
 
                     //function call to update data
                     updateData(id, title, description);
+                    startActivity(new Intent(MainActivity.this, ListActivity.class));
                 }
                 else {
                     //adding new
@@ -178,25 +195,50 @@ public class MainActivity extends AppCompatActivity{
                         String sLongitude = String.valueOf(longitude);
 
                     String horario = data_hora;
+                    String foto = fotodocontato;
 
-                    uploadData(title, description, sLatitude, sLongitude, horario);
+                    uploadData(title, description, sLatitude, sLongitude, horario, foto);
+                    startActivity(new Intent(MainActivity.this, ListActivity.class));
                 }
-
-
-
             }
         });
 
         //Botão para startar a ListActivity
-        mListBtn.setOnClickListener(new View.OnClickListener() {
+/*        mListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, ListActivity.class));
                 finish();
             }
-        });
-
+        });*/
     }
+
+    public void tirarFoto() {
+        dispatchTakePictureIntent();
+    }
+
+
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            fotoContato.setImageBitmap(imageBitmap);
+            fotodocontato = ImageUtil.encode(imageBitmap);
+        }
+    }
+
 
     /////////////////////// GPS INICIO /////////////////////
     public void getLocation(View view){
@@ -223,7 +265,7 @@ public class MainActivity extends AppCompatActivity{
                     public void onComplete(@NonNull Task<Void> task) {
                         //called when updated sucessfully
                         pd.dismiss();
-                        Toast.makeText(MainActivity.this, "Atualizando...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Local atualizado!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -238,7 +280,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     //ADICIONANDO DADOS NO FIRESTORE
-    private void uploadData(String title, String description, String sLatitude, String sLongitude, String horario) {
+    private void uploadData(String title, String description, String sLatitude, String sLongitude, String horario, String foto) {
         pd.setTitle("Adicionando dados no Firestore...");
         pd.show();
         //Gera ID aleatório
@@ -251,6 +293,7 @@ public class MainActivity extends AppCompatActivity{
         doc.put("latitude", sLatitude);
         doc.put("longitude", sLongitude);
         doc.put("horario", horario);
+        doc.put("foto",foto);
 
 
         db.collection("Documents").document(id).set(doc)
@@ -269,6 +312,10 @@ public class MainActivity extends AppCompatActivity{
                     }
                 });
     }
+
+
+
+
 
 
 }

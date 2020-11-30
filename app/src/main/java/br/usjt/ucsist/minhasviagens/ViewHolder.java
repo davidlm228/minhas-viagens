@@ -1,6 +1,7 @@
 package br.usjt.ucsist.minhasviagens;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
 
+    public ImageView fotoContatoCard;
     TextView mTitleTv, mDescriptionTv, mLatitudeTv, mLongitudeTv, mHorarioTv;
+
     View mView;
 
 
@@ -41,13 +44,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         mLatitudeTv = itemView.findViewById(R.id.rLatitudeTv);
         mLongitudeTv = itemView.findViewById(R.id.rLongitudeTv);
         mHorarioTv = itemView.findViewById(R.id.rDataTv);
-
+        fotoContatoCard = itemView.findViewById(R.id.imagemdLocal);
 
     }
 
-
     private ViewHolder.ClickListener mClickListener;
-
 
     //Interface para o Click Listener
     public interface ClickListener{

@@ -31,7 +31,6 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
         View itemView = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.model_layout, viewGroup, false);
 
-
         ViewHolder viewHolder = new ViewHolder(itemView);
         //handle item clicks here
 
@@ -39,7 +38,6 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
             @Override
             public void onItemClick(View view, int position) {
                 //Isso vai ser chamado quando usuário clicar no item
-
 
                 // Mostra os dados em um Toast TESTE
                 //String title = modelList.get(position).getTitle();
@@ -50,15 +48,15 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
             public void onItemLongClick(View view, final int position) {
                 //Isso vai ser chamado quando usuário fazer um click longo no item
 
-                //Creating AlertDialog
+                //Criando um AlertDialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(listActivity);
-                //options to display in dialog
+
+                //Opçães do Dialog
                 String[] options = { "Editar", "Excluir" };
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
                         if (which == 0){
-
                             //Pega os dados
                             String id = modelList.get(position).getId();
                             String title = modelList.get(position).getTitle();
@@ -66,6 +64,7 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
                             String latitude = modelList.get(position).getLatitude();
                             String longitude = modelList.get(position).getLongitude();
                             String horario = modelList.get(position).getHorario();
+                            String foto = modelList.get(position).getFoto();
 
                             //intent to start activity
                             Intent intent = new Intent(listActivity, MainActivity.class);
@@ -77,6 +76,7 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
                             intent.putExtra("pLatitude", latitude);
                             intent.putExtra("pLongitude", longitude);
                             intent.putExtra("pHorario", horario);
+                            intent.putExtra("foto", foto);
 
                             //start activity
                             listActivity.startActivity(intent);
@@ -92,10 +92,6 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         });
 
-
-
-
-
         return viewHolder;
     }
 
@@ -107,6 +103,7 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
         viewHolder.mLatitudeTv.setText(modelList.get(i).getLatitude());
         viewHolder.mLongitudeTv.setText(modelList.get(i).getLongitude());
         viewHolder.mHorarioTv.setText(modelList.get(i).getHorario());
+        viewHolder.fotoContatoCard.setImageBitmap(ImageUtil.decode(modelList.get(i).getFoto()));
     }
 
     @Override

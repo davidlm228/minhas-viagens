@@ -1,7 +1,7 @@
 package br.usjt.ucsist.minhasviagens;
 
 public class Model {
-    String id, title, description, latitude, longitude, horario;
+    String id, title, description, latitude, longitude, horario, foto;
 
 
 
@@ -9,13 +9,22 @@ public class Model {
 
     }
 
-    public Model(String id, String title, String description, String latitude, String longitude, String horario) {
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public Model(String id, String title, String description, String latitude, String longitude, String horario, String foto) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
         this.horario = horario;
+        this.foto = foto;
     }
 
     public String getId() {
